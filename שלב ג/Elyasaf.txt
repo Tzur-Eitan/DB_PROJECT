@@ -1,0 +1,100 @@
+CREATE TABLE lender
+(
+  lenderName INT NOT NULL,
+  lenderAddress INT NOT NULL,
+  lenderPhone INT NOT NULL,
+  LenderMail INT NOT NULL,
+  lenderBN INT NOT NULL,
+  PRIMARY KEY (lenderBN)
+);
+
+CREATE TABLE person
+(
+  PfullName INT NOT NULL,
+  PID INT NOT NULL,
+  Paddress INT NOT NULL,
+  pPhone INT NOT NULL,
+  Pmail INT NOT NULL,
+  PRIMARY KEY (PID)
+);
+
+CREATE TABLE loaner
+(
+  PID INT NOT NULL,
+  PRIMARY KEY (PID),
+  FOREIGN KEY (PID) REFERENCES person(PID)
+);
+
+CREATE TABLE president
+(
+  PID INT NOT NULL,
+  PRIMARY KEY (PID),
+  FOREIGN KEY (PID) REFERENCES person(PID)
+);
+
+CREATE TABLE guarantee
+(
+  PID INT NOT NULL,
+  PRIMARY KEY (PID),
+  FOREIGN KEY (PID) REFERENCES person(PID)
+);
+
+CREATE TABLE bank
+(
+  bankName INT NOT NULL,
+  bankBN INT NOT NULL,
+  PRIMARY KEY (bankBN)
+);
+
+CREATE TABLE payment
+(
+  dueDate INT NOT NULL,
+  startDate INT NOT NULL,
+  totalAmount INT NOT NULL,
+  methodsOfPayments INT NOT NULL,
+  payCode INT NOT NULL,
+  PRIMARY KEY (payCode)
+);
+
+CREATE TABLE payedBy
+(
+  PID INT NOT NULL,
+  payCode INT NOT NULL,
+  PRIMARY KEY (PID, payCode),
+  FOREIGN KEY (PID) REFERENCES loaner(PID),
+  FOREIGN KEY (payCode) REFERENCES payment(payCode)
+);
+
+CREATE TABLE loan
+(
+  loanDate INT NOT NULL,
+  loanID INT NOT NULL,
+  payCode INT NOT NULL,
+  PID INT NOT NULL,
+  PID INT NOT NULL,
+  lenderBN INT NOT NULL,
+  PRIMARY KEY (loanID, payCode),
+  FOREIGN KEY (payCode) REFERENCES payment(payCode),
+  FOREIGN KEY (PID) REFERENCES guarantee(PID),
+  FOREIGN KEY (PID) REFERENCES president(PID),
+  FOREIGN KEY (lenderBN) REFERENCES lender(lenderBN)
+);
+
+CREATE TABLE bankAccount
+(
+  accountNumber INT NOT NULL,
+  balance INT NOT NULL,
+  bankBN INT NOT NULL,
+  PRIMARY KEY (accountNumber, bankBN),
+  FOREIGN KEY (bankBN) REFERENCES bank(bankBN)
+);
+
+CREATE TABLE belongsTo
+(
+  PID INT NOT NULL,
+  accountNumber INT NOT NULL,
+  bankBN INT NOT NULL,
+  PRIMARY KEY (PID, accountNumber, bankBN),
+  FOREIGN KEY (PID) REFERENCES loaner(PID),
+  FOREIGN KEY (accountNumber, bankBN) REFERENCES bankAccount(accountNumber, bankBN)
+);
